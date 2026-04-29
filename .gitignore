@@ -1,0 +1,52 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Flutter
+frontend/build/
+frontend/.dart_tool/
+frontend/.packages
+
+# Backend
+backend/*.db
+backend/*.sqlite3
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Playwright
+backend/browsers/
+
+# Audio temp files
+*.wav
+*.mp3
+!docs/**/*.wav
+!docs/**/*.mp3
+
+# API keys
+secrets/
+*.key
