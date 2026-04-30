@@ -16,7 +16,7 @@
 
 ---
 
-## 시나리오 A — 외부 LLM API 사용 (t3.small)
+## 시나리오 A — 외부 LLM API 사용 (t3.large)
 
 > 백엔드에서 GPT-4o / Gemini / Claude 등 외부 API를 호출하고, Playwright headless 브라우저 테스트를 Windows 환경에서 수행하는 구성
 
@@ -24,7 +24,7 @@
 
 | 항목 | 사양 | 평가 |
 |------|------|------|
-| **인스턴스** | t3.small (2 vCPU, 2GiB RAM) | ✅ FastAPI + Playwright headless + 외부 API 호출 방식에 적합 |
+| **인스턴스** | t3.large (2 vCPU, 8GiB RAM) | ✅ FastAPI + Playwright headless + 외부 API 호출에 여유로운 메모리 확보 |
 | **스토리지** | gp3 25GiB | ✅ OS(~15GiB) + Python 환경(~3GiB) + 프로젝트(~5GiB) + 여유 |
 | **GPU** | 없음 | ✅ 외부 LLM API 사용 시 GPU 불필요 |
 | **네트워크** | 최대 5Gbps | ✅ 개발 단계 충분 |
@@ -33,21 +33,21 @@
 
 | 순번 | 실습재료명 | 규격 | 단위 | 수량 | 단가 (USD) | 총계 (USD) | URL |
 |:----:|-----------|------|:----:|:----:|-----:|-----:|-----|
-| 1 | Amazon EC2 인스턴스 | t3.small (2 vCPU, 2GiB RAM) / **Windows** On-Demand | 시간 | 240 | $0.0444 | **$10.66** | [EC2 요금](https://aws.amazon.com/ko/ec2/pricing/on-demand/) |
+| 1 | Amazon EC2 인스턴스 | t3.large (2 vCPU, 8GiB RAM) / **Windows** On-Demand | 시간 | 240 | $0.1316 | **$31.58** | [EC2 요금](https://aws.amazon.com/ko/ec2/pricing/on-demand/) |
 | 2 | Amazon EBS 볼륨 | 범용 SSD (gp3) 25GiB — 상시 과금 | GB/월 | 25 | $0.0912 | **$2.28** | [EBS 요금](https://aws.amazon.com/ko/ebs/pricing/) |
 | 3 | 퍼블릭 IPv4 주소 | 탄력적 IP (Elastic IP) — 24시간 과금 | 시간 | 720 | $0.0050 | **$3.60** | [VPC 요금](https://aws.amazon.com/ko/vpc/pricing/) |
 | 4 | Amazon VPC | 기본 VPC + 서브넷 + 인터넷 게이트웨이 | 식 | 1 | $0.00 | **$0.00** | [VPC 요금](https://aws.amazon.com/ko/vpc/pricing/) |
-| 5 | 보안 그룹 | SSH/RDP, HTTP(80), HTTPS(443), FastAPI(8000) | 식 | 1 | $0.00 | **$0.00** | [VPC 요금](https://aws.amazon.com/ko/vpc/pricing/) |
+| 5 | 보안 그룹 | RDP(3389), HTTP(80), HTTPS(443), FastAPI(8000) | 식 | 1 | $0.00 | **$0.00** | [VPC 요금](https://aws.amazon.com/ko/vpc/pricing/) |
 
 ### A. 월간 비용 요약
 
 | 항목 | 산정 근거 | 월 비용 (USD) | 월 비용 (KRW) |
 |------|----------|-------------:|-------------------:|
-| EC2 (t3.small Windows) | 240h × $0.0444/hr | $10.66 | ₩15,841 |
+| EC2 (t3.large Windows) | 240h × $0.1316/hr | $31.58 | ₩46,928 |
 | EBS (gp3, 25GiB) | 25GB × $0.0912/GB/월 | $2.28 | ₩3,388 |
 | 퍼블릭 IPv4 (탄력적 IP) | 720h × $0.005/hr | $3.60 | ₩5,350 |
 | VPC / 보안 그룹 | — | $0.00 | ₩0 |
-| **합계** | | **$16.54** | **₩24,579** |
+| **합계** | | **$37.46** | **₩55,666** |
 
 ---
 
@@ -99,13 +99,13 @@
 
 ## 시나리오 비교
 
-| 비교 항목 | 시나리오 A (t3.small) | 시나리오 B (g4dn.xlarge) |
+| 비교 항목 | 시나리오 A (t3.large) | 시나리오 B (g4dn.xlarge) |
 |----------|:--------------------:|:-----------------------:|
-| **월 비용 (USD)** | **$16.54** | **$207.60** |
-| **월 비용 (KRW)** | **₩24,579** | **₩308,494** |
-| **비용 배수** | 1× (기준) | **12.6×** |
+| **월 비용 (USD)** | **$37.46** | **$207.60** |
+| **월 비용 (KRW)** | **₩55,666** | **₩308,494** |
+| **비용 배수** | 1× (기준) | **5.5×** |
 | **vCPU** | 2 | 4 |
-| **RAM** | 2 GiB | 16 GiB |
+| **RAM** | 8 GiB | 16 GiB |
 | **GPU** | ❌ 없음 | ✅ NVIDIA T4 (16GB VRAM) |
 | **로컬 LLM 추론** | ❌ 불가 | ✅ 7B~13B 모델 가능 |
 | **Playwright headless** | ✅ 가능 | ✅ 가능 |
@@ -133,7 +133,7 @@
 │   │   │  EC2 (Windows Server)        │     │     │
 │   │   │  ┌────────────────────────┐  │     │     │
 │   │   │  │ FastAPI Backend        │  │     │     │
-│   │   │  │ - 온톨로지             │  │     │
+│   │   │  │ - 온톨로지             │  │     │     │
 │   │   │  │ - 서브에이전트         │  │     │     │
 │   │   │  │ - 하네싱 로직          │  │     │     │
 │   │   │  └────────────────────────┘  │     │     │
