@@ -1,0 +1,50 @@
+# ===========================
+# Test-Navi Backend Dependencies
+# ===========================
+
+# --- Core Framework ---
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+python-multipart==0.0.20
+python-dotenv==1.1.0
+pydantic==2.11.3
+pydantic-settings==2.9.1
+
+# --- WebSocket ---
+websockets==15.0.1
+
+# --- HTTP Client ---
+httpx==0.28.1
+
+# --- STT (Speech-to-Text) ---
+openai==1.78.1
+# faster-whisper==1.1.0  # GPU 환경에서 활성화
+
+# --- TTS (Text-to-Speech) ---
+edge-tts==7.0.0
+
+# --- LLM ---
+# openai 패키지로 GPT-4o 사용 (위에 이미 포함)
+# google-generativeai==0.8.5  # Gemini 사용 시
+# anthropic==0.52.0  # Claude 사용 시
+
+# --- Browser Automation ---
+playwright==1.52.0
+
+# --- Windows App Automation ---
+# pywinauto==0.6.8  # Phase 2에서 활성화
+# pyautogui==0.9.54  # Phase 2에서 활성화
+
+# --- Audio Processing ---
+soundfile==0.13.1
+numpy==2.2.6
+
+# --- Utilities ---
+loguru==0.7.3
+pyyaml==6.0.2
+aiofiles==24.1.0
+
+# --- Testing ---
+pytest==8.3.5
+pytest-asyncio==0.26.0
+httpx==0.28.1
