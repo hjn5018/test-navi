@@ -4,10 +4,11 @@ LLM Agent API 엔드포인트
 사용자 입력을 처리하고 자동화 액션을 생성하는 API를 제공합니다.
 """
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
 from loguru import logger
 
 from app.models.schemas import AgentRequest, AgentResponse, ErrorResponse
+from app.services.llm_service import LLMFactory
 
 router = APIRouter()
 
@@ -23,12 +24,20 @@ async def process_input(request: AgentRequest):
     """사용자 입력을 처리하여 액션을 생성하는 REST 엔드포인트"""
     logger.info(f"Agent 요청 수신: {request.text[:50]}...")
 
-    # TODO: LLM Agent 연동 (1.4.2 태스크)
-    return AgentResponse(
-        text="[LLM Agent 연동 대기]",
-        actions=[],
-        feedback="현재 Agent 서비스가 준비 중입니다.",
-    )
+    try:
+        llm_service = LLMFactory.get_service()
+        response = await llm_service.process(
+            user_input=request.text,
+            context=request.context,
+            # history=... # 추후 세션 관리에서 주입
+        )
+        return response
+    except ValueError as e:
+        logger.error(f"LLM 설정 오류: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        logger.error(f"Agent 처리 중 예외 발생: {e}")
+        raise HTTPException(status_code=500, detail="Agent 처리 중 오류가 발생했습니다.")
 
 
 @router.websocket("/stream")
