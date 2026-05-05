@@ -56,13 +56,26 @@ test-navi/
 
 ### Backend 설정
 
+1. **가상환경 생성 및 의존성 설치**
 ```bash
 cd backend
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
+```
+
+2. **환경 변수 설정**
+`backend` 디렉토리 내에 `.env.example` 파일을 복사하여 `.env` 파일을 생성하고 필요한 API 키를 설정합니다.
+```bash
+copy .env.example .env
+```
+`.env` 파일에 발급받은 `OPENAI_API_KEY` 등 필수 항목을 기입하세요.
+
+3. **서버 실행**
+```bash
 uvicorn app.main:app --reload
 ```
+서버가 실행되면 `http://localhost:8000/docs`에서 API 문서를 확인할 수 있습니다.
 
 ### Frontend 설정
 
