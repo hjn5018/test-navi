@@ -27,13 +27,35 @@ async def execute_actions(request: AutomationRequest):
     """자동화 액션을 실행하는 REST 엔드포인트"""
     logger.info(f"자동화 실행 요청: {request.task_id}, 액션 수: {len(request.actions)}")
 
-    # TODO: 자동화 엔진 연동 (1.5.4 태스크)
+    from app.services.automation_service import get_automation_service
+    service = get_automation_service()
+    
+    # 향후 백그라운드 작업으로 분리하거나 상태 관리를 추가해야 함
+    # 현재는 요청 안에서 바로 실행
+    results = await service.execute_actions(request.task_id, request.actions)
+    
+    # 임시 리소스 정리
+    await service.cleanup()
+
+    success_count = sum(1 for r in results if r.success)
+    is_all_success = success_count == len(request.actions)
+    
+    status = "completed" if is_all_success else "failed"
+    message = "모든 액션 실행 성공" if is_all_success else "일부 또는 전체 액션 실행 실패"
+    
+    last_error = None
+    if not is_all_success:
+        failed_results = [r for r in results if not r.success]
+        if failed_results:
+            last_error = failed_results[0].error
+
     return AutomationStatusResponse(
         task_id=request.task_id,
-        status="pending",
-        message="자동화 엔진 연동 대기 중",
-        completed_actions=0,
+        status=status,
+        message=message,
+        completed_actions=success_count,
         total_actions=len(request.actions),
+        error=last_error,
     )
 
 
