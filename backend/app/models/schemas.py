@@ -30,6 +30,8 @@ class STTResponse(BaseModel):
     text: str = Field(..., description="인식된 텍스트")
     language: str = Field("ko", description="언어 코드")
     confidence: float = Field(0.0, description="인식 신뢰도 (0.0 ~ 1.0)")
+    duration_ms: float = Field(0.0, description="처리 소요 시간 (밀리초)")
+    error: Optional[str] = Field(None, description="에러 메시지 (성공 시 None)")
 
 
 # ============================================================
